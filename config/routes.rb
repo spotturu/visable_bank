@@ -1,3 +1,13 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  resources :token, only: [:create]
+  resources :health_check, only: [:index]
+  resources :users, only: [:create]
+
+  resources :accounts, only: [:create] do
+    member do
+      post :deposit
+      post :withdraw
+      post :transfer
+    end
+  end
 end

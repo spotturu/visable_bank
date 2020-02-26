@@ -1,24 +1,46 @@
-# README
+## Visable Bank Application
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+* Visable Bank System Application
+* Rails 6
+* Ruby 2.5.7 
 
-Things you may want to cover:
+* Automatically pushes it to dockerhub if tests pass
 
-* Ruby version
+## Installation
+```bash
+git clone https://github.com/spotturu/visable_bank.git
+cd visable_bank
+bundle install
+rails s
+```
 
-* System dependencies
+## API
+### create user
+```bash
+curl -H 'Content-Type: application/json' -d '{"email": "visable@mail.com", "password": "123123123"}' -X POST 'http://localhost:3000/users'
+```
 
-* Configuration
+### generate token
+```bash
+curl -H 'Content-Type: application/json' -d '{"email": "visable@mail.com", "password": "123123123"}' -X POST 'http://localhost:3000/token'
+```
 
-* Database creation
+### open a new account
+```bash
+curl -H 'Content-Type: application/json' -d '{"name": "Commerze Bank", "user_id": 1}' -H "Authorization: Bearer <ACCESS_TOKEN>" -X POST 'http://localhost:3000/accounts'
+```
 
-* Database initialization
+### deposit into account
+```bash
+curl -H 'Content-Type: application/json' -d '{"amount": 50.00}' -H "Authorization: Bearer <ACCESS_TOKEN>" -X POST 'http://localhost:3000/accounts/<account_id>/deposit'
+```
 
-* How to run the test suite
+### withdraw from account
+```bash
+curl -H 'Content-Type: application/json' -d '{"amount": 19.99}' -H "Authorization: Bearer <ACCESS_TOKEN>" -X POST 'http://localhost:3000/accounts/<account_id>/withdraw'
+```
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### transfer from one account to another account
+```bash
+curl -H 'Content-Type: application/json' -d '{"recipient_id": <reciever_account_id>, "amount": 19.99}' -H "Authorization: Bearer <ACCESS_TOKEN>" -X POST 'http://localhost:3000/accounts/<account_id>/transfer'
+```
