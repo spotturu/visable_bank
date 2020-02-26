@@ -3,7 +3,7 @@ class AccountsController < ApplicationController
 
   def create
     return head :unprocessable_entity unless Account.open(account_params)
-    render {code: 201, status: 'Created', message: 'Account created successfully'}
+    render json: {code: 201, status: 'Created', message: 'Account created successfully'}
   end
 
   def deposit
@@ -15,8 +15,8 @@ class AccountsController < ApplicationController
 
   def withdraw
     account = Account.find(params[:id])
-    return json: {code: 404, success: false, status: 'Not Found', message: 'Account Not found'} unless account
-    return json: {code: 500, success: false, status: :unprocessable_entity} unless Account.withdraw(account, amount)
+    # return json: {code: 404, success: false, status: not_found, message: 'Account Not found'} unless account
+    # return json: {code: 500, success: false, status: :unprocessable_entity} unless Account.withdraw(account, amount)
     render json: {code: 200, success: true, status: 'Withdrawn', message: "#{amount} withdrawn successfully"}
   end
 
@@ -31,6 +31,15 @@ class AccountsController < ApplicationController
     return head :unprocessable_entity unless Account.transfer(account, recipient, amount)
     render json: {code:200, status: 'transfered', message: "#{amount} transfered successfully"}
   end
+
+  def mini_statement
+    account = Account.find(params[:id])
+    return head :not_found unless account
+    transactions =  Account.transactions(account, 10)
+    return head :unprocessable_entity unless transactions
+    render json: {code:200, status: 'Desposited',data: transactions,  message: "Recent transactions successfully"}
+  end
+
 
   private
   def account_params

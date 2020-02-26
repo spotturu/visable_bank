@@ -1,7 +1,9 @@
 class Account < ApplicationRecord
   belongs_to :user
+  has_many :transactions
 
-  validates_presence_of :name, :user_id
+  validates :name, presence: true
+  validates :user_id, presence: true
 
   def self.open(params)
     account = new(params)
@@ -10,17 +12,27 @@ class Account < ApplicationRecord
   end
 
   def self.deposit(account, amount)
-    puts "Depositing #{amount} on account #{account.id}"
+    message = "Depositing #{amount} on account #{account.name}"
+    puts message
     return false unless self.amount_valid?(amount)
-    account.balance = (account.balance += amount).round(2)
-    account.save!
+    ActiveRecord::Base.transaction do
+      account.balance = (account.balance += amount).round(2)
+      account.save!
+      transaction = Transaction.create_transaction(account, 'Deposit', amount, message)
+      transaction.save!
+    end
   end
 
   def self.withdraw(account, amount)
-    puts "Withdrawing #{amount} on account #{account.id}"
+    message = "Withdrawing #{amount} on account #{account.name}"
+    puts message
     return false unless self.amount_valid?(amount)
-    account.balance = (account.balance -= amount).round(2)
-    account.save!
+    ActiveRecord::Base.transaction do
+      account.balance = (account.balance -= amount).round(2)
+      account.save!
+      transaction = Transaction.create_transaction(account, 'Withdraw', amount, message)
+      transaction.save!
+    end
   end
 
   def self.transfer(account, recipient, amount)
@@ -30,6 +42,11 @@ class Account < ApplicationRecord
       self.withdraw(account, amount)
       self.deposit(recipient, amount)
     end
+  end
+
+  def self.transactions(account, no_records)
+   puts "Last #{no_records} transactions from account #{account.id}"
+   account.transactions.statement(no_records).to_json
   end
 
   private

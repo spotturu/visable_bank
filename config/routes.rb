@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       post :deposit
       post :withdraw
       post :transfer
+      post :mini_statement
     end
   end
 end

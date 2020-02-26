@@ -1,4 +1,3 @@
-
 class BaseController < ApplicationController
 	include ErrorStatus
 	

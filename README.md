@@ -44,3 +44,8 @@ curl -H 'Content-Type: application/json' -d '{"amount": 19.99}' -H "Authorizatio
 ```bash
 curl -H 'Content-Type: application/json' -d '{"recipient_id": <reciever_account_id>, "amount": 19.99}' -H "Authorization: Bearer <ACCESS_TOKEN>" -X POST 'http://localhost:3000/accounts/<account_id>/transfer'
 ```
+
+### account mini statement with recent 10 transactions
+```bash
+curl -H 'Content-Type: application/json' -H "Authorization: Bearer <ACCESS_TOKEN>" -X POST 'http://localhost:3000/accounts/<account_id>/mini_statement'
+```

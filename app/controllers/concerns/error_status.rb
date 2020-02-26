@@ -6,6 +6,6 @@ module ErrorStatus
 	def rest_api_status(status)
 		error_details = REST_API_STATUS_CODE.select{|k,v| v == status}
 		return error_details.to_a[0] if error_details.present?
-		['500', REST_API_STATUS_CODE[:500]]
+		['500', REST_API_STATUS_CODE['500']]
 	end
 end
