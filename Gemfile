@@ -24,6 +24,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'jwt'
 gem 'bcrypt'
+gem 'nexmo'
 gem 'rubocop', '0.80.0', require: false, group: [:development, :tests]
 gem 'rails_best_practices', '1.19.5', require: false, group: [:development, :tests]
 

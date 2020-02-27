@@ -14,7 +14,7 @@ class Transaction < ApplicationRecord
 	end
 
 	def self.create_transaction(account, transaction_type, amount, details)
-    	create(account_id: account.id, transaction_type: transaction_type, amount: amount, details: details)
+    	create(account_id: account.id, balance: account.balance, transaction_type: transaction_type, amount: amount, details: details)
   	end
 
   	private

@@ -1,47 +1,62 @@
-class AccountsController < ApplicationController
+class AccountsController < BaseController
   before_action :authenticate!
+  include SmsNotification
 
   def create
-    return head :unprocessable_entity unless Account.open(account_params)
-    render json: {code: 201, status: 'Created', message: 'Account created successfully'}
+    account = Account.open(account_params)
+    return head :unprocessable_entity unless account
+    return_resp('Created', account,  'Account created successfully')
   end
 
   def deposit
     account = Account.find(params[:id])
-    return head :not_found unless account
+    return return_error(:not_found, 'Account not found!') unless account 
     return head :unprocessable_entity unless Account.deposit(account, amount)
-    render json: {code:200, status: 'Desposited', message: "#{amount} deposited successfully"}
+    message = "#{amount} deposited successfully"
+    send_notification(account, message)
+    return_resp('success', nil,  message)
   end
 
   def withdraw
     account = Account.find(params[:id])
-    # return json: {code: 404, success: false, status: not_found, message: 'Account Not found'} unless account
-    # return json: {code: 500, success: false, status: :unprocessable_entity} unless Account.withdraw(account, amount)
-    render json: {code: 200, success: true, status: 'Withdrawn', message: "#{amount} withdrawn successfully"}
+    return return_error(:not_found, 'Account not found!') unless account
+    return head :unprocessable_entity unless Account.withdraw(account, amount)
+    message = "#{amount} withdrawn successfully"
+    send_notification(account, message)
+    return_resp('success', nil,  message)
+  end
+
+  def balance
+    account = Account.find(params[:id])
+    return return_error(:not_found, 'Account not found!') unless account
+    message = "#{account.amount} - current balance amount"
+    send_notification(account, message)
+    return_resp('success', nil,  message)
   end
 
   def transfer
     account = Account.find(params[:id])
-    return head :not_found unless account
-
+    return return_error(:not_found, 'Account not found!') unless account
     recipient_param = params.permit(:recipient_id)
     recipient = Account.find(recipient_param[:recipient_id])
-    return head :not_found unless recipient
-
+    return return_error(:not_found, 'Recipient not found!') unless recipient
     return head :unprocessable_entity unless Account.transfer(account, recipient, amount)
-    render json: {code:200, status: 'transfered', message: "#{amount} transfered successfully"}
+    send_notification(account, "#{amount} debited successfully")
+    send_notification(recipient, "#{amount} credited successfully")
+    return_resp('success', nil,  "#{amount} transfered successfully")
   end
 
   def mini_statement
     account = Account.find(params[:id])
     return head :not_found unless account
-    transactions =  Account.transactions(account, 10)
+    params[:no_of_days] ||= 10
+    transactions =  Account.transactions(account, params[:no_of_days])
     return head :unprocessable_entity unless transactions
-    render json: {code:200, status: 'Desposited',data: transactions,  message: "Recent transactions successfully"}
+    return_resp('success', transactions, "Recent transactions successfully")
   end
 
-
   private
+
   def account_params
     params.require(:account).permit(:name, :user_id)
   end

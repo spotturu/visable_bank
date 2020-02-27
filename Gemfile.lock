@@ -129,6 +129,10 @@ GEM
     net-http-digest_auth (1.4.1)
     net-http-persistent (3.1.0)
       connection_pool (~> 2.2)
+    nexmo (6.3.0)
+      jwt (~> 2)
+      sorbet-runtime (~> 0.5)
+      zeitwerk (~> 2, >= 2.2)
     nio4r (2.5.2)
     nokogiri (1.10.8-x64-mingw32)
       mini_portile2 (~> 2.4.0)
@@ -213,6 +217,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     ruby-progressbar (1.10.1)
     sexp_processor (4.14.1)
+    sorbet-runtime (0.5.5400)
     spring (2.1.0)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -253,6 +258,7 @@ DEPENDENCIES
   factory_bot_rails
   jwt
   listen (~> 3.0.5)
+  nexmo
   puma (~> 4.1)
   rails (~> 6.0.2, >= 6.0.2.1)
   rails_best_practices (= 1.19.5)

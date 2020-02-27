@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       post :withdraw
       post :transfer
       post :mini_statement
+      get :balance
     end
   end
 end
