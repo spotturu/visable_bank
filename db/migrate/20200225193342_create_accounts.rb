@@ -4,7 +4,6 @@ class CreateAccounts < ActiveRecord::Migration[6.0]
       t.string :name
       t.float :balance, default: 0.00
       t.references :user, foreign_key: true
-
       t.timestamps     
     end
   end

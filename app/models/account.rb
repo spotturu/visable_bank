@@ -13,7 +13,6 @@ class Account < ApplicationRecord
 
   def self.deposit(account, amount)
     message = "Depositing #{amount} on account #{account.name}"
-    puts message
     return false unless self.amount_valid?(amount)
     ActiveRecord::Base.transaction do
       account.balance = (account.balance += amount).round(2)
@@ -25,8 +24,8 @@ class Account < ApplicationRecord
 
   def self.withdraw(account, amount)
     message = "Withdrawing #{amount} on account #{account.name}"
-    puts message
-    return false unless self.amount_valid?(amount)
+    response = self.amount_valid?(amount, account.balance)
+    return response unless response[:success]
     ActiveRecord::Base.transaction do
       account.balance = (account.balance -= amount).round(2)
       account.save!
@@ -37,7 +36,8 @@ class Account < ApplicationRecord
 
   def self.transfer(account, recipient, amount)
     puts "Transfering #{amount} from account #{account.id} to account #{recipient.id}"
-    return false unless self.amount_valid?(amount)
+    response = self.amount_valid?(amount, account.balance)
+    return response unless response[:success]
     ActiveRecord::Base.transaction do
       self.withdraw(account, amount)
       self.deposit(recipient, amount)
@@ -50,11 +50,12 @@ class Account < ApplicationRecord
   end
 
   private
-  def self.amount_valid?(amount)
+  def self.amount_valid?(amount, balance)
     if amount <= 0
-      puts 'Transaction failed! Amount must be greater than 0.00'
-      return false
+      return {success: false, message: 'Transaction failed! Amount must be greater than 0.00'}
+    elsif balance < amount
+       return {success: false, message:'Transaction failed! Insufficient funds'}
     end
-    return true
+    return {success: true}
   end
 end

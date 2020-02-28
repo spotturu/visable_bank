@@ -2,8 +2,8 @@ class TokenController < BaseController
   def create
     email, password = token_params.values_at(:email, :password)
     user = User.find_by(email: email)
-    return return_error(:unauthorized, 'Invalid user credentials!') if user.nil? or !user.valid_password?(password)
-    return_resp('success', payload(user), 'User token generated successfully')
+    return error_response(:unauthorized, 'Invalid user credentials!') if user.nil? or !user.valid_password?(password)
+    success_response('success', payload(user), 'User token generated successfully')
   end
 
   private

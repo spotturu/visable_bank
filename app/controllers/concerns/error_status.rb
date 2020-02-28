@@ -1,7 +1,8 @@
 module ErrorStatus
 	REST_API_STATUS_CODE = Hash[
-		'401': 'unauthorized', '200': 'success', '201': 'created' ,'400': 'bad request',
-		'404': 'not_found',	'500': 'internal sever error' #Add if any additonal status codes here
+		'401': 'unauthorized', '200': 'success', '201': 'Created' ,'400': 'bad request',
+		'422': 'unprocessable_entity',
+		'404': 'not_found',	'500': 'internal_server_error'
 	]
 	def rest_api_status(status)
 		error_details = REST_API_STATUS_CODE.select{|k,v| v == status}

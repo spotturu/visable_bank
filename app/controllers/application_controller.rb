@@ -8,7 +8,7 @@ class ApplicationController < ActionController::API
     return render_not_authenticated unless user_id_in_token?
     @current_user = User.find(auth_token[:user_id])
   rescue JWT::VerificationError, JWT::DecodeError
-    render_not_authenticated
+     render_not_authenticated
   end
 
   private
@@ -27,6 +27,6 @@ class ApplicationController < ActionController::API
   end
 
   def render_not_authenticated
-    render json: {errors: ['Not Authenticated']}, status: :unauthorized
+    error_response(:unauthorized, 'Invalid token!')
   end
 end

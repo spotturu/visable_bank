@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_203839) do
     t.float "amount", default: 0.0, null: false
     t.string "transaction_number", null: false
     t.string "transaction_type", null: false
+    t.string "balance", default: "0.0", null: false
     t.integer "account_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -36,6 +37,7 @@ ActiveRecord::Schema.define(version: 2020_02_26_203839) do
     t.string "email"
     t.string "password"
     t.string "crypted_password"
+    t.integer "mobile_number"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
